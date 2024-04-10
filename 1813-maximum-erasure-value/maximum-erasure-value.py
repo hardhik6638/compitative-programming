@@ -1,14 +1,17 @@
 class Solution:
     def maximumUniqueSubarray(self, nums: List[int]) -> int:
-        ans=0
-        score=0
-        lst=[]
-        for i in nums:
-            if i in lst:
-                indx=lst.index(i)
-                lst=lst[indx+1:]
-                score=sum(lst)
-            lst.append(i)
-            score+=i
-            ans=max(ans,score)
-        return ans
+        counter=defaultdict(int) # track count of  elements in the window
+        res=i=tot=0
+		
+        for j in range(len(nums)):
+            x=nums[j]   
+            tot+=x
+            counter[x]+=1
+            # adjust the left bound of sliding window until you get all unique elements
+            while i < j and counter[x]>1: 
+                counter[nums[i]]-=1
+                tot-=nums[i]
+                i+=1
+            
+            res=max(res, tot)            
+        return res
